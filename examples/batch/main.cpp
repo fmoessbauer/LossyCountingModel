@@ -14,20 +14,15 @@
 #include <lossyCountingModel.hpp>
 
 std::normal_distribution<> getDistribution(){
-  char lower = '0';
-  char upper = 'z';
-  char mean  = (upper + lower) / 2;
-  return std::normal_distribution<>(mean, 4);
+  return std::normal_distribution<>(0, 10);
 }
 
 int main(int argc, char ** argv){
   // define input stream
   long   stream_size = 1e8;
-  double frequency   = 0.05;
-  double error       = 0.005 * frequency;
-  int    pre_cal_win = 10000;
-  int    prog_int    = 10;    // print progess each 10%
-  std::vector<char> buffer;
+  double frequency   = 0.01;
+  double error       = 0.001 * frequency;
+  std::vector<long> buffer;
 
   // use a random normal distribution of [0-z]
   std::random_device rd;
@@ -35,34 +30,36 @@ int main(int argc, char ** argv){
   auto dist = getDistribution();
 
   // setup counting model
-  LossyCountingModel<char> lcm(frequency, error);
+  LossyCountingModel<long> lcm(frequency, error);
   auto lcm_state = lcm.getState();
+  // divide the stream in 20 parts
+  int  pre_cal_win = (stream_size / lcm_state.w) / 20;
   buffer.resize(lcm_state.w * pre_cal_win);
   printState(lcm_state);
 
   std::chrono::high_resolution_clock::duration time_acc{0};
   int num_windows = stream_size / lcm_state.w;
-  for(int win = 0; win<num_windows; ++win){
+  int num_calls   = num_windows / pre_cal_win;
+
+  for(int call = 0; call<num_calls; ++call){
     // calculate numbers
-    if(win % pre_cal_win == 0){
 #pragma omp parallel for schedule(static, 1000)
-      for(unsigned int i=0; i<lcm_state.w * pre_cal_win; ++i){
-        buffer[i] = std::round(dist(gen));
-      }
+    for(unsigned int i=0; i<lcm_state.w * pre_cal_win; ++i){
+      buffer[i] = std::round(dist(gen));
     }
 
     // process stream
     auto begin = std::chrono::high_resolution_clock::now();
-    auto begptr = buffer.begin() + (win % pre_cal_win) * lcm_state.w;
-    lcm.processWindow(begptr);
+    for(int win=0; win<pre_cal_win; ++win){
+      auto begptr = buffer.begin() + (win * lcm_state.w);
+      lcm.processWindow(begptr);
+    }
     auto end   = std::chrono::high_resolution_clock::now();
     time_acc += end-begin;
 
     // print progress
-    if(win % (num_windows / prog_int) == 0){
-      double prog = static_cast<double>(win) / static_cast<double>(num_windows);
-      std::cout << "Progress: " << prog * 100 << "%" << std::endl;
-    }
+    double prog = static_cast<double>(call) / static_cast<double>(num_calls);
+    std::cout << "Progress: " << prog * 100 << "%" << std::endl;
   }
 
   // compute results
