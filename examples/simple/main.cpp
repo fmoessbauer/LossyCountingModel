@@ -20,7 +20,7 @@ std::normal_distribution<> getDistribution(){
 
 int main(int argc, char ** argv){
   // define input stream
-  long   stream_size = 1e6;
+  long   stream_size = 1e7;
   double frequency   = 0.05;
   double error       = 0.005 * frequency;
 

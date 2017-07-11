@@ -23,19 +23,18 @@ public:
   struct State {
     double    f; /// frequency
     double    e; /// error
-    long      w; /// window size
-    long long N; /// stream length
+    unsigned long      w; /// window size
+    unsigned long long N; /// stream length
   };
 
 private:
   using histogram_type = typename std::unordered_map<T,int>;
 
-  double          _frequency;
-  double          _error;
-  long            _window_size;
-  long long       _total_processed_elements = 0;
-  histogram_type  _histogram;
-  std::vector<T>  _window_buffer;
+  double              _frequency;
+  double              _error;
+  unsigned long       _window_size;
+  unsigned long long  _total_processed_elements = 0;
+  histogram_type      _histogram;
 
 public:
   /**
@@ -46,9 +45,7 @@ public:
     _frequency(frequency),
     _error(error),
     _window_size(1.0 / error)
-  {
-    _window_buffer.reserve(_window_size);
-  }
+  { }
 
   /**
    * process a single item of the datastream
@@ -56,9 +53,11 @@ public:
    *         false otherwise
    */
   bool processItem(const T & e) noexcept {
-    _window_buffer.push_back(e);
-    if(_window_buffer.size() == static_cast<unsigned long>(_window_size)){
-      _processWindow();
+    ++(_histogram[e]);
+    ++_total_processed_elements;
+    if((_total_processed_elements % _window_size) == (_window_size - 1))
+    {
+      _decreaseAllFrequencies();
       return true;
     }
     return false;
@@ -77,7 +76,6 @@ public:
       ++it;
     }
     _decreaseAllFrequencies();
-    _window_buffer.clear();
   }
 
   /**
@@ -116,15 +114,6 @@ private:
         ++it;
       }
     } 
-  }
-
-  void _processWindow() noexcept {
-    for(const auto & e : _window_buffer){
-      ++(_histogram[e]);
-      ++_total_processed_elements;
-    }
-    _decreaseAllFrequencies();
-    _window_buffer.clear();
   }
 };
 #endif

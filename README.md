@@ -13,7 +13,7 @@ The implementation of the algorithm is capable of processing streams with millio
 
 The Lossy Counting Model takes a frequency and an error as input. The frequency denotes the threshold for an item to be visible in the output. The error denotes the maximum underestimation of a returned element to be e*N where N is the lenght of the stream.
 
-The model is capable of processing single elements by internally storing them in a buffer until sufficient elements have arrived. Alternatively batches of size window size can be processed. Using this, no data is copied.
+The model is capable of processing single elements as well as batches of size window size. In both cases no data is copied.
 
 ### Setup a model and process
 
