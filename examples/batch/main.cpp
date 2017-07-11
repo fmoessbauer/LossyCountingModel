@@ -31,7 +31,7 @@ int main(int argc, char ** argv){
   auto dist = getDistribution();
 
   // setup counting model
-  LossyCountingModel<value_t> lcm(frequency, error);
+  LossyCountingModel<value_t> lcm(frequency, error, stream_size);
   auto lcm_state = lcm.getState();
   // divide the stream in 20 parts
   int  pre_cal_win = (stream_size / lcm_state.w) / 20;

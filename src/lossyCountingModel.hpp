@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 /**
  * Lossy Counting Model implemenation for processing a
@@ -40,11 +41,16 @@ public:
    * Setup a Lossy Counting Model with sampling
    * frequency and error.
    */
-  LossyCountingModel(double frequency, double error):
+  LossyCountingModel(double frequency, double error, long estimated_length = 1e5):
     _frequency(frequency),
     _error(error),
     _window_size(1.0 / error)
-  { }
+  {
+    // tuning of hash table
+    int estimated_size = static_cast<int>((1.0 / _error) * std::log2(
+                            _error * static_cast<double>(estimated_length)));
+    _histogram.reserve(estimated_size);
+  }
 
   /**
    * process a single item of the datastream
