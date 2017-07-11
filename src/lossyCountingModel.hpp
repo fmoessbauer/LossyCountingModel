@@ -70,7 +70,7 @@ public:
    */
   template<typename Iter>
   void processWindow(Iter it){
-    for(int cnt = 0; cnt<_window_size; ++cnt){
+    for(unsigned int cnt = 0; cnt<_window_size; ++cnt){
       ++(_histogram[*it]);
       ++_total_processed_elements;
       ++it;

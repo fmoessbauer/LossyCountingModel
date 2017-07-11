@@ -46,7 +46,7 @@ int main(int argc, char ** argv){
     // calculate numbers
     if(win % pre_cal_win == 0){
 #pragma omp parallel for schedule(static, 1000)
-      for(int i=0; i<lcm_state.w * pre_cal_win; ++i){
+      for(unsigned int i=0; i<lcm_state.w * pre_cal_win; ++i){
         buffer[i] = std::round(dist(gen));
       }
     }
