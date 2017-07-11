@@ -13,6 +13,7 @@
 #include <util/statistics.hpp>
 #include <lossyCountingModel.hpp>
 
+using value_t = long;
 std::normal_distribution<> getDistribution(){
   return std::normal_distribution<>(0, 10);
 }
@@ -22,7 +23,7 @@ int main(int argc, char ** argv){
   long   stream_size = 1e8;
   double frequency   = 0.01;
   double error       = 0.001 * frequency;
-  std::vector<long> buffer;
+  std::vector<value_t> buffer;
 
   // use a random normal distribution of [0-z]
   std::random_device rd;
@@ -30,7 +31,7 @@ int main(int argc, char ** argv){
   auto dist = getDistribution();
 
   // setup counting model
-  LossyCountingModel<long> lcm(frequency, error);
+  LossyCountingModel<value_t> lcm(frequency, error);
   auto lcm_state = lcm.getState();
   // divide the stream in 20 parts
   int  pre_cal_win = (stream_size / lcm_state.w) / 20;
@@ -65,7 +66,7 @@ int main(int argc, char ** argv){
   // compute results
   auto results   = lcm.computeOutput();
 
-  printPerformance(lcm.getState(), sizeof(char), time_acc);
+  printPerformance(lcm.getState(), sizeof(value_t), time_acc);
 
   // output results
   std::cout << "Histogram:" << std::endl;

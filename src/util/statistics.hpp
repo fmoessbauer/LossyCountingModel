@@ -32,12 +32,15 @@ void printPerformance(
   auto duration = std::chrono::duration_cast<ms>(dur);
   long long processed_bytes = (lcm_state.N * elem_size);
   long long bytes_per_ms    = processed_bytes / duration.count();
-  double gb_per_s = static_cast<double>(bytes_per_ms) / (MEGA);
+  long long elems_per_ms    = lcm_state.N / duration.count();
+  double mb_per_s     = static_cast<double>(bytes_per_ms) / 1024.0;
+  double elems_per_s  = static_cast<double>(elems_per_ms) / 1024.0;
 
   std::cout << "--- Performance ---" << std::endl
             << "Processed MB: " << (processed_bytes) / (MEGA) << std::endl
             << "Time in ms:   " << duration.count()           << std::endl
-            << "GB/s:         " << gb_per_s                   << std::endl
+            << "MB/s:         " << mb_per_s                   << std::endl
+            << "MElem/s:      " << elems_per_s                << std::endl
             << "--- ----------- ---" << std::endl;
 }
 
