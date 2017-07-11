@@ -7,7 +7,7 @@ FILES=main.cpp
 all: release
 
 release: $(FILES)
-	$(CXX) $(FLAGS) $(LIBINC) -O3 $(FILES) -o $(OUTPUT)
+	$(CXX) $(FLAGS) $(LIBINC) -O3 -Ofast -march=native -D_GLIBCXX_PARALLEL $(FILES) -o $(OUTPUT)
 	
 debug: $(FILES)
 	$(CXX) $(FLAGS) -g $(LIBINC) $(FILES) -o $(OUTPUT)

@@ -41,10 +41,10 @@ public:
    * Setup a Lossy Counting Model with sampling
    * frequency and error.
    */
-  LossyCountingModel(double frequency, double error, long estimated_length = 1e5):
+  LossyCountingModel(double frequency, double error, long estimated_length = 1e5) noexcept :
     _frequency(frequency),
     _error(error),
-    _window_size(1.0 / error)
+    _window_size(1.0 / error) 
   {
     // tuning of hash table
     int estimated_size = static_cast<int>((1.0 / _error) * std::log2(
@@ -74,7 +74,10 @@ public:
    * elements
    */
   template<typename Iter>
-  void processWindow(Iter it){
+  void processWindow(Iter it) noexcept {
+#ifdef __GNUG__
+    __builtin_prefetch(&(*it), 0, 0);
+#endif
     for(unsigned int cnt = 0; cnt<_window_size; ++cnt){
       ++(_histogram[*it]);
       ++_total_processed_elements;
@@ -109,7 +112,7 @@ public:
   }
 
 private:
-  void _decreaseAllFrequencies(){
+  void _decreaseAllFrequencies() noexcept {
     auto it = _histogram.begin();
     while(it != _histogram.end()){
       if(it->second == 1){
