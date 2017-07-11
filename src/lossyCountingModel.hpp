@@ -1,7 +1,6 @@
 #ifndef LOSSY_COUNTING_MODEL_H
 #define LOSSY_COUNTING_MODEL_H
 
-#include <iostream>
 #include <map>
 #include <unordered_map>
 #include <vector>
