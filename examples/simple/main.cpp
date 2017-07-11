@@ -7,8 +7,8 @@
 #include <iostream>
 #include <random>
 #include <chrono>
-#include "statistics.hpp"
-#include "lossyCountingModel.hpp"
+#include <util/statistics.hpp>
+#include <lossyCountingModel.hpp>
 
 std::normal_distribution<> getDistribution(){
   char lower = '0';

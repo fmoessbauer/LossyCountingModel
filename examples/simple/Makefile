@@ -1,16 +1,16 @@
 CXX=g++
 FLAGS=-std=c++11 -Wall -Wpedantic
-OUTPUT=lcm_demo
+LIBINC=-I ../../src
+OUTPUT=lcm_simple
 FILES=main.cpp
-#FILES=hp_batch.cpp
 
 all: release
 
 release: $(FILES)
-	$(CXX) $(FLAGS) -O3 $(FILES) -o $(OUTPUT)
+	$(CXX) $(FLAGS) $(LIBINC) -O3 $(FILES) -o $(OUTPUT)
 	
 debug: $(FILES)
-	$(CXX) $(FLAGS) -g $(FILES) -o $(OUTPUT)
+	$(CXX) $(FLAGS) -g $(LIBINC) $(FILES) -o $(OUTPUT)
 
 clean:
 	rm -rf *.o gmon.out $(OUTPUT)

@@ -1,5 +1,5 @@
-#ifndef LOSSY_COUNTING_H
-#define LOSSY_COUNTING_H
+#ifndef LOSSY_COUNTING_MODEL_H
+#define LOSSY_COUNTING_MODEL_H
 
 #include <iostream>
 #include <map>
@@ -7,10 +7,19 @@
 #include <vector>
 #include <algorithm>
 
+/**
+ * Lossy Counting Model implemenation for processing a
+ * data stream according to the following constraints:
+ * - Single Pass
+ * - Limited memory
+ * - Volume of data in real-time
+ */
 template<typename T>
 class LossyCountingModel {
 public:
-  using histogram_type = typename std::unordered_map<T,int>;
+  /**
+   * holds a LCM Model state
+   */
   struct State {
     double    f; /// frequency
     double    e; /// error
@@ -19,13 +28,14 @@ public:
   };
 
 private:
+  using histogram_type = typename std::unordered_map<T,int>;
+
   double          _frequency;
   double          _error;
   long            _window_size;
   long long       _total_processed_elements = 0;
   histogram_type  _histogram;
   std::vector<T>  _window_buffer;
-
 
 public:
   /**
@@ -72,7 +82,9 @@ public:
 
   /**
    * returns the final histogram containing only elements
-   * with count exceeding fN - eN as a map.
+   * with count exceeding fN - eN. The type of the container
+   * the final histogram is stored in can be set using the
+   * template parameter.
    */
   template<typename ContainerT = std::map<T,int>>
   ContainerT computeOutput() const noexcept {
@@ -116,3 +128,4 @@ private:
   }
 };
 #endif
+
