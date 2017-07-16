@@ -75,14 +75,11 @@ public:
    */
   template<typename Iter>
   void processWindow(Iter it) noexcept {
-#ifdef __GNUG__
-    __builtin_prefetch(&(*it), 0, 0);
-#endif
-    for(unsigned int cnt = 0; cnt<_window_size; ++cnt){
+    for(unsigned int cnt = 0; cnt < _window_size; ++cnt){
       ++(_histogram[*it]);
-      ++_total_processed_elements;
       ++it;
     }
+    _total_processed_elements += _window_size;
     _decreaseAllFrequencies();
   }
 

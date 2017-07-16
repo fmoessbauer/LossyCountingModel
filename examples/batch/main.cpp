@@ -56,7 +56,7 @@ int main(int argc, char ** argv){
     // process stream
     auto begin = std::chrono::high_resolution_clock::now();
     for(int win=0; win<pre_cal_win; ++win){
-      auto begptr = buffer.begin() + (win * lcm_state.w);
+      const auto & begptr = buffer.cbegin() + (win * lcm_state.w);
       lcm.processWindow(begptr);
     }
     auto end  = std::chrono::high_resolution_clock::now();
