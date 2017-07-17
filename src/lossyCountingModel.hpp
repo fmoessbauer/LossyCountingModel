@@ -44,7 +44,7 @@ public:
   LossyCountingModel(double frequency, double error, long estimated_length = 1e5) noexcept :
     _frequency(frequency),
     _error(error),
-    _window_size(1.0 / error) 
+    _window_size(std::round(1.0 / error)) 
   {
     // tuning of hash table
     int estimated_size = static_cast<int>((1.0 / _error) * std::log2(
