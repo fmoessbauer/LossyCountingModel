@@ -1,4 +1,7 @@
 # Lossy Counting Model
+
+[![CircleCI](https://circleci.com/gh/fmoessbauer/LossyCountingModel.svg?style=shield)](https://circleci.com/gh/fmoessbauer/LossyCountingModel)
+
 Implementation of the Lossy Counting stream processing algorithm in C++.
 
 Parts of the implementation are based on [mvogiatzis/freq-count](https://github.com/mvogiatzis/freq-count). He also made an excellent blog article on how the algorithms works.
