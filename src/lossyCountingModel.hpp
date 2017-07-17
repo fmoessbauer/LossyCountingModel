@@ -60,7 +60,7 @@ public:
   bool processItem(const T & e) noexcept {
     ++(_histogram[e]);
     ++_total_processed_elements;
-    if((_total_processed_elements % _window_size) == (_window_size - 1))
+    if((_total_processed_elements % _window_size) == 0)
     {
       _decreaseAllFrequencies();
       return true;
