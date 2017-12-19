@@ -113,7 +113,7 @@ private:
     auto it = _histogram.begin();
     while(it != _histogram.end()){
       if(it->second == 1){
-        _histogram.erase(it++);
+        it = _histogram.erase(it);
       } else {
         --(it->second);
         ++it;
